@@ -137,13 +137,13 @@ def send_email(subject, to_addr, body_text):
         print("В конфиге не указан отправитель. Используем такой же как и логин")
         smtp_from_addr = smtp_login
 
-
+    print(smtp_login)
     BODY = "\r\n".join((
-        "From: %s" % smtp_from_addr,
-        "To: %s" % to_addr,
+       # "From: %s" % smtp_login,
+       # "To: %s" % to_addr,
         "Subject: %s" % subject ,
         "",
-        body_text
+        "body_text"
         ))
     #sys.exit(1)
     server = smtplib.SMTP(smtp_host, smtp_port)        
@@ -151,7 +151,7 @@ def send_email(subject, to_addr, body_text):
         server.starttls()    
     #server.login(smtp_login, smtp_password)
     server.login("python@cloud16.ru", "eholot22")
-    server.sendmail(smtp_from_addr, to_addr, BODY)
+    server.sendmail(smtp_login, to_addr, BODY)
     #server.sendmail("python@cloud16.ru", "aagafonov@inbox.ru", "Hi!")
     server.quit()
 
@@ -276,8 +276,8 @@ if admin_notif:
     for send1 in range(len(admin_notif)):
         print(str(table[(int(admin_notif[send1])-1):int(admin_notif[send1])]["FN"].values[0]),":[",admin_notif[send1],"]")
 
-
-subject = " Дорогой коллега! поздравляем Вас с днем рождения! и Желаем Вам побольше котиков!"
+subject = "Hey! Happy Birthday!"
+#subject = " Дорогой коллега! поздравляем Вас с днем рождения! и Желаем Вам побольше котиков!"
 if bd:
     print("У пользователя сегодня ДР")
     for send1 in range(len(bd)):
