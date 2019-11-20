@@ -1,0 +1,6 @@
+[Unit]
+Description=Mail sendes
+
+[Service]
+Type=oneshot
+ExecStart=/opt/sender/sendmail.py
