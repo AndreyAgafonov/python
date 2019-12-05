@@ -1,0 +1,95 @@
+
+-------настройка ноды с роутерами---------------------------
+[mdb-london]
+создать пользователя restorator/restorator100
+
+добавить в /etc/sudoers
+restorator ALL=(root) NOPASSWD: /bin/systemctl restart mongod.service
+restorator ALL=(root) NOPASSWD: /bin/systemctl stop mongos.service
+restorator ALL=(root) NOPASSWD: /bin/systemctl start mongos.service
+restorator ALL=(root) NOPASSWD: /bin/cp /etc/mongoc.conf.standalone /etc/mongoc.conf, /bin/cp /etc/mongoc.conf.bak /etc/mongoc.conf
+
+положить соответвенно в домашную директорию
+restartMongoC.sh
+#!/bin/bash
+echo "restart mongoc (start)"
+/bin/systemctl restart mongoc.service
+echo "restart mongoc (end)"
+
+stopMongoS.sh
+#!/bin/bash
+echo "stop mongos (start)"
+/bin/systemctl stop mongos.service
+echo "stop mongos (end)"
+
+startMongoS.sh
+#!/bin/bash
+echo "start mongos (start)"
+/bin/systemctl start mongos.service
+echo "start mongos (end)"
+
+Создать заранее копию файла /etc/mongoс.conf с названием /etc/mongoс.conf.bak и копию с названием /etc/mongod.conf.standalone, из standalone убрать опции replication и sharding
+
+-------настройка шард ноды----------------------------------
+[mdb-jack/mdb-ketamin/mdb-suslik]
+создать пользователя restorator/restorator100
+
+добавить в /etc/sudoers
+restorator ALL=(root) NOPASSWD: /bin/systemctl restart mongod.service
+
+положить соответвенно в домашную директорию
+restartMongoD.sh
+#!/bin/bash
+echo "restart mongod (start)"
+/bin/systemctl restart mongod.service
+echo "restart mongod (end)"
+
+---------настройка ноды для запуска скрипта--------------------
+sudo apt-get update
+sudo apt-get install libffi-dev python-dev python-pip-whl python-pip build-essential libssl-dev
+sudo pip install --upgrade pip
+sudo pip install paramiko pymongo
+
+---------настройка конфигурации---------
+настройка осуществляется при помощи ini файла properties.ini
+[general]
+user_login:restorator
+user_pass:restorator100
+backup_mark:2017-03-31T00-00UTC
+mongodb_user:root
+mongodb_pass:secretPassword
+mongodb_database: smartcat
+mongodb_auth_database: admin
+
+[config]
+remote_host: mdb-london.sc-eu.local
+remote_port: 27035
+remote_path: /nfs/
+replicasetname_new: config
+
+[caravan]
+remote_host: mdb-jack.sc-eu.local
+remote_port: 27017
+remote_path: /nfs/
+replicasetname_new: apple
+
+[frog]
+remote_host: mdb-ketamin.sc-eu.local
+remote_port: 27017
+remote_path: /nfs/
+replicasetname_new: banan
+
+[zebra]
+remote_host: mdb-suslik.sc-eu.local
+remote_port: 27017
+remote_path: /nfs/
+replicasetname_new: cherry
+
+[terra]
+remote_host: mdb-yellow.sc-eu.local
+remote_port: 27017
+remote_path: /nfs/
+replicasetname_new: duck
+
+---------       ---------
+
